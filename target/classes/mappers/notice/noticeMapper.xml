@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 다른 mapper와 중복되지 않도록 네임스페이스 기재 -->
+<mapper namespace="notice">
+	<select id="list"
+		resultType="com.example.project.model.notice.dto.NoticeDTO">
+		<include refid="paging_header"></include>
+		select bno,title,writer,content,regdate,viewcnt,m.name,m.userid
+			        from notice n, member m 
+			        where m.userid=writer
+			        order by bno desc
+		<include refid="paging_footer"></include>
+	</select>
+	
+	<select id="noticeArticle" resultType="int">
+		select count(*) from notice
+	</select>
+
+	<insert id="insert">
+	insert into notice (bno,title,content,writer) values
+	(seq_notice.nextval, #{title}, #{content}, #{writer})
+	</insert>
+	
+	<update id="increaseViewcnt">
+	update notice set viewcnt=viewcnt+1
+	where bno=#{bno}
+	</update>
+	
+	<select id="read" resultType="com.example.project.model.notice.dto.NoticeDTO">
+	select bno,title,writer,name,content,regdate,viewcnt
+	from notice n, member m
+	where n.writer=m.userid and bno=#{bno}
+	</select>
+	
+	<update id="update">
+	update notice
+	set title=#{title}, content=#{content}
+	where bno=#{bno}
+	</update>
+	
+	<delete id="delete">
+	delete from board where bno=#{bno}
+	</delete>
+	
+	<sql id="paging_header">
+		select *
+		from (
+		select rownum as rn, A.*
+		from (
+	</sql>
+	<sql id="paging_footer">
+		) A
+		) where rn between #{start} and #{end}
+	</sql>
+</mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
