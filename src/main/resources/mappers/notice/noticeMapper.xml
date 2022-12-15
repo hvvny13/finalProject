@@ -10,7 +10,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<include refid="paging_header"></include>
 		select bno,title,writer,content,regdate,viewcnt,m.name,m.userid
 			        from notice n, member m 
-			        where m.userid=writer
+			        where m.userid=writer and show='y'
 			        order by bno desc
 		<include refid="paging_footer"></include>
 	</select>
@@ -41,9 +41,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	where bno=#{bno}
 	</update>
 	
-	<delete id="delete">
-	delete from board where bno=#{bno}
-	</delete>
+	<update id="delete">
+	update notice set show='n' where bno=#{bno}
+	</update>
 	
 	<sql id="paging_header">
 		select *

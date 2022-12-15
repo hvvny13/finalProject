@@ -14,6 +14,8 @@ function update()	{
 	var content=$("#content").val();
 	document.form1.action="${path}/notice/update.do";
 	document.form1.submit();
+	console.log(title);
+	console.log(content);
 	}
 </script>
 <style type="text/css">
@@ -28,6 +30,14 @@ table .name {
 </style>
 </head>
 <body>
+<script type="text/javascript">
+function deleteAll() {
+	if(confirm("삭제하시겠습니까?")) {
+		document.form1.action="${path}/notice/delete.do";
+		document.form1.submit();
+	}
+}
+</script>
 <c:choose>
 <c:when test="${sessionScope.userid == 'admin'}">
 <%@ include file="../include/admin_menu.jsp" %>
@@ -36,7 +46,7 @@ table .name {
 </c:choose>
 <c:choose>
 <c:when test="${sessionScope.userid == 'admin'}">
-<form id="form1" name="form1" method="post" enctype="multipart/form-data" autocomplete="off">
+<form id="form1" name="form1" method="post" enctype="multipart/form-data">
 <table class="table table-bordered" style="width: 90%;">
 <tr>
 <td style="width: 100px">제목</td>
@@ -62,16 +72,17 @@ table .name {
    </script>
 <tr>
 <td colspan="4">
+<input type="hidden" name="bno" value="${dto.bno}">
 <input class="btn btn-outline-dark flex-shrink-0" type="button" value="수정" id="btnUpdate" onclick="update()">
 <input class="btn btn-outline-dark flex-shrink-0" type="button" value="목록" id="btnList" onclick="location.href='${path}/notice/list.do';">
-<input class="btn btn-outline-dark flex-shrink-0" type="button" value="삭제" id="btnDelete"onclick="location.href='${path}/notice/delete.do';">
+<input class="btn btn-outline-dark flex-shrink-0" type="button" value="삭제" id="btnDelete"onclick="deleteAll()">
 </td>
 </tr>
 </table>
 </form>
 </c:when>
 <c:otherwise>
-<form id="form1" name="form1" method="post" enctype="multipart/form-data" autocomplete="off">
+<form name="form2" id="form2" method="post" enctype="multipart/form-data" autocomplete="off">
 <table class="table table-bordered" style="width: 90%;">
 <tr>
 <td style="width: 100px">제목</td>
@@ -88,8 +99,7 @@ table .name {
 <td>${dto.viewcnt}</td>
 </tr>
 <tr>
-<td class="name">내용</td>
-<td colspan="3">${dto.content}</td></tr>
+<td colspan="4">${dto.content}</td></tr>
 <tr>
 <td colspan="4">
 <input class="btn btn-outline-dark flex-shrink-0" type="button" value="목록" id="btnList" onclick="location.href='${path}/notice/list.do';">
